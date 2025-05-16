@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useCallback } from "react";
-import Image from "next/image";
 import { Overlay } from "../data/mapList";
 import ZoomControls from "./ZoomControl";
 
@@ -126,18 +125,21 @@ export default function MapViewer({
           height: "100%",
         }}
       >
-        <Image
+        <img
           src={mapSrc}
           alt="Base Map"
-          fill={true}
-          priority
           draggable={false}
+          onLoad={onMapLoaded}
           style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            objectFit: "contain",
             pointerEvents: "none",
             userSelect: "none",
-            objectFit: "contain",
           }}
-          onLoad={onMapLoaded}
         />
 
         {/* Show overlays only after base map loaded */}
@@ -145,19 +147,20 @@ export default function MapViewer({
           overlays.map(
             (overlay) =>
               visibleOverlays.includes(overlay.id) && (
-                <Image
+                <img
                   key={overlay.id}
                   src={overlay.src}
                   alt={`${overlay.id} overlay`}
-                  fill={true}
                   draggable={false}
                   style={{
                     position: "absolute",
                     top: 0,
                     left: 0,
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "contain",
                     pointerEvents: "none",
                     userSelect: "none",
-                    objectFit: "contain",
                   }}
                 />
               )
