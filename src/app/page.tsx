@@ -8,7 +8,8 @@ import { maps } from "./data/mapList";
 export default function Page() {
   const mapKeys = Object.keys(maps);
   const [selectedMap, setSelectedMap] = useState<string>(mapKeys[0]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [loadingKey] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
 
   const currentMap = maps[selectedMap];
   const [mapSrc, setMapSrc] = useState(currentMap.base);
@@ -17,7 +18,6 @@ export default function Page() {
   const ceilingOverlays = currentMap.overlays.filter(
     (o) => o.type === "ceiling"
   );
-  
 
   // Default visibility: ceiling ON, weedkiller OFF
   const initialVisible = ceilingOverlays.map((o) => o.id);
@@ -34,8 +34,13 @@ export default function Page() {
       .filter((o) => o.type === "ceiling")
       .map((o) => o.id);
     setVisibleOverlays(ceiling);
-  }, [selectedMap]);
 
+    // Fallback timeout: disable loading spinner after 3s
+    const timeout = setTimeout(() => setIsLoading(false), 3000);
+
+    return () => clearTimeout(timeout); // Clean up on unmount or map change
+  }, [selectedMap]);
+  
   const toggleOverlay = (id: string) => {
     setVisibleOverlays((prev) =>
       prev.includes(id) ? prev.filter((o) => o !== id) : [...prev, id]
@@ -51,7 +56,6 @@ export default function Page() {
     );
   };
 
-
   return (
     <div className="relative w-screen h-screen">
       <Sidebar
@@ -61,8 +65,8 @@ export default function Page() {
         disableAllOfType={disableAllOfType}
         switchMap={(id) => setSelectedMap(id)}
         isLoading={isLoading}
-        mapKeys={mapKeys} 
-        currentMapId={selectedMap} 
+        mapKeys={mapKeys}
+        currentMapId={selectedMap}
       />
 
       {isLoading && (
@@ -72,11 +76,14 @@ export default function Page() {
       )}
 
       <MapViewer
+        key={loadingKey}
         mapSrc={mapSrc}
         overlays={currentMap.overlays}
         visibleOverlays={visibleOverlays}
         isLoading={isLoading}
-        onMapLoaded={() => setIsLoading(false)}
+        onMapLoaded={() => {
+          setTimeout(() => setIsLoading(false), 50); // 50ms delay helps prevent flicker
+        }}
       />
     </div>
   );

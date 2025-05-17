@@ -3,7 +3,7 @@
 import { useEffect, useRef, useCallback } from "react";
 import { Overlay } from "../data/mapList";
 import ZoomControls from "./ZoomControl";
-
+ 
 interface MapViewerProps {
   overlays: Overlay[];
   visibleOverlays: string[];
@@ -129,7 +129,10 @@ export default function MapViewer({
           src={mapSrc}
           alt="Base Map"
           draggable={false}
-          onLoad={onMapLoaded}
+          onLoad={() => {
+            // Ensure delay so React has applied loading state
+            setTimeout(onMapLoaded, 10);
+          }}
           style={{
             position: "absolute",
             top: 0,
@@ -166,22 +169,23 @@ export default function MapViewer({
               )
           )}
       </div>
-
-      <ZoomControls
-        zoomIn={() => {
-          scaleRef.current = Math.min(scaleRef.current + 0.5, 5);
-          scheduleUpdate();
-        }}
-        zoomOut={() => {
-          scaleRef.current = Math.max(scaleRef.current - 0.5, 0.5);
-          scheduleUpdate();
-        }}
-        resetZoom={() => {
-          scaleRef.current = 1;
-          offsetRef.current = { x: 0, y: 0 };
-          scheduleUpdate();
-        }}
-      />
+      {
+        <ZoomControls
+          zoomIn={() => {
+            scaleRef.current = Math.min(scaleRef.current + 0.5, 5);
+            scheduleUpdate();
+          }}
+          zoomOut={() => {
+            scaleRef.current = Math.max(scaleRef.current - 0.5, 0.5);
+            scheduleUpdate();
+          }}
+          resetZoom={() => {
+            scaleRef.current = 1;
+            offsetRef.current = { x: 0, y: 0 };
+            scheduleUpdate();
+          }}
+        />
+      }
     </div>
   );
 }

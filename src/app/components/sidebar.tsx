@@ -4,7 +4,7 @@ import { useState } from "react";
 import HelpPanel from "./Faq";
 import { Overlay } from "../data/mapList";
 import { tierMetadata, getMetadataKey } from "../data/TierMetadata";
-
+import { maps } from "../data/mapList";
 interface SidebarProps {
   overlays: Overlay[];
   visibleOverlays: string[];
@@ -153,7 +153,7 @@ export default function Sidebar({
             >
               {mapKeys.map((key) => (
                 <option key={key} value={key}>
-                  {key}
+                  {maps[key].displayName}
                 </option>
               ))}
             </select>
