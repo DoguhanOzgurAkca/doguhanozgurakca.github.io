@@ -123,7 +123,7 @@ export const maps: Record<string, MapData> = {
   },
   Fiorina: {
     displayName: "Fiorina Science Annex",
-    base: `${R2_BASE}/Fiorina/Fiorina-base.webp`,
+    base: `${R2_BASE}/Fiorina/Fiorina-Science-Annex-base.webp`,
     overlays: [
       {
         id: "Fiorina-ceiling4",
