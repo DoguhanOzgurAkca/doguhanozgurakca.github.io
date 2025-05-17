@@ -110,7 +110,7 @@ export const maps: Record<string, MapData> = {
         type: "ceiling",
       },
       {
-        id: "Chances-Claim-weedkiller2",
+        id: "Chances-Claim-weedkiller1",
         src: `${R2_BASE}/Chances-Claim/Chances-Claim-lz1.webp`,
         type: "weedkiller",
       },
