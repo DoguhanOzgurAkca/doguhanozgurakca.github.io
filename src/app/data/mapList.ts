@@ -224,7 +224,7 @@ export const maps: Record<string, MapData> = {
       },
       {
         id: "Kutjevo-weedkiller2",
-        src: `${R2_BASE}/Kutjevo/Kutjevo-Refinery--lz2.webp`,
+        src: `${R2_BASE}/Kutjevo/Kutjevo-Refinery-lz2.webp`,
         type: "weedkiller",
       },
     ],
