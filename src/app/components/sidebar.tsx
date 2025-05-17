@@ -10,10 +10,12 @@ interface SidebarProps {
   visibleOverlays: string[];
   toggleOverlay: (id: string) => void;
   disableAllOfType: (type: "ceiling" | "weedkiller") => void;
-  switchMap: (id: string) => void; 
+  switchMap: (id: string) => void;
   isLoading: boolean;
   mapKeys: string[];
-  currentMapId: string; 
+  currentMapId: string;
+  interactive: boolean; 
+  toggleInteractive: () => void;
 }
 
 export default function Sidebar({
@@ -25,6 +27,8 @@ export default function Sidebar({
   isLoading,
   currentMapId,   
   mapKeys,      
+  interactive,
+  toggleInteractive,
 
 }: SidebarProps) {
   const [isOpen, setIsOpen] = useState(true);
@@ -134,6 +138,12 @@ export default function Sidebar({
               );
             })}
           </ul>
+          <button
+            onClick={toggleInteractive}
+            className="w-full mb-4 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded text-sm"
+          >
+            {interactive ? "Disable" : "Enable"} Zoom & Pan
+          </button>
 
           <button
             onClick={() => setHelpOpen(true)}

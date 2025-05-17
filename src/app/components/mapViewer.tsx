@@ -3,13 +3,14 @@
 import { useEffect, useRef, useCallback } from "react";
 import { Overlay } from "../data/mapList";
 import ZoomControls from "./ZoomControl";
- 
+
 interface MapViewerProps {
   overlays: Overlay[];
   visibleOverlays: string[];
   mapSrc: string;
   isLoading: boolean;
   onMapLoaded: () => void;
+  interactive: boolean;
 }
 
 export default function MapViewer({
@@ -18,6 +19,7 @@ export default function MapViewer({
   mapSrc,
   isLoading,
   onMapLoaded,
+  interactive,
 }: MapViewerProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<HTMLDivElement>(null);
@@ -47,6 +49,8 @@ export default function MapViewer({
   }, []);
 
   useEffect(() => {
+    if (!interactive) return;
+
     const container = containerRef.current;
     if (!container) return;
 
@@ -76,10 +80,14 @@ export default function MapViewer({
     };
 
     container.addEventListener("wheel", handleWheel, { passive: false });
-    return () => container.removeEventListener("wheel", handleWheel);
-  }, [scheduleUpdate]);
+
+    return () => {
+      container.removeEventListener("wheel", handleWheel);
+    };
+  }, [interactive, scheduleUpdate]);
 
   const onMouseDown = (e: React.MouseEvent) => {
+    if (!interactive) return;
     isDragging.current = true;
     dragStart.current = {
       x: e.clientX - offsetRef.current.x,
@@ -89,6 +97,7 @@ export default function MapViewer({
   };
 
   const onMouseMove = (e: React.MouseEvent) => {
+    if (!interactive) return;
     if (!isDragging.current) return;
     offsetRef.current = {
       x: e.clientX - dragStart.current.x,
@@ -98,12 +107,22 @@ export default function MapViewer({
   };
 
   const onMouseUp = () => {
+    if (!interactive) return;
     isDragging.current = false;
     if (containerRef.current) containerRef.current.style.cursor = "grab";
   };
 
   useEffect(() => {
+    // Reset transform on mount
     applyTransform();
+
+    // Clean up on unmount to reset cursor and cancel animation frame
+    return () => {
+      if (containerRef.current) containerRef.current.style.cursor = "";
+      if (rafRef.current !== null) {
+        cancelAnimationFrame(rafRef.current);
+      }
+    };
   }, []);
 
   return (
@@ -128,11 +147,9 @@ export default function MapViewer({
         <img
           src={mapSrc}
           alt="Base Map"
+          loading="lazy"
           draggable={false}
-          onLoad={() => {
-            // Ensure delay so React has applied loading state
-            setTimeout(onMapLoaded, 10);
-          }}
+          onLoad={() => setTimeout(onMapLoaded, 10)}
           style={{
             position: "absolute",
             top: 0,
@@ -145,7 +162,6 @@ export default function MapViewer({
           }}
         />
 
-        {/* Show overlays only after base map loaded */}
         {!isLoading &&
           overlays.map(
             (overlay) =>
@@ -169,23 +185,22 @@ export default function MapViewer({
               )
           )}
       </div>
-      {
-        <ZoomControls
-          zoomIn={() => {
-            scaleRef.current = Math.min(scaleRef.current + 0.5, 5);
-            scheduleUpdate();
-          }}
-          zoomOut={() => {
-            scaleRef.current = Math.max(scaleRef.current - 0.5, 0.5);
-            scheduleUpdate();
-          }}
-          resetZoom={() => {
-            scaleRef.current = 1;
-            offsetRef.current = { x: 0, y: 0 };
-            scheduleUpdate();
-          }}
-        />
-      }
+
+      <ZoomControls
+        zoomIn={() => {
+          scaleRef.current = Math.min(scaleRef.current + 0.5, 5);
+          scheduleUpdate();
+        }}
+        zoomOut={() => {
+          scaleRef.current = Math.max(scaleRef.current - 0.5, 0.5);
+          scheduleUpdate();
+        }}
+        resetZoom={() => {
+          scaleRef.current = 1;
+          offsetRef.current = { x: 0, y: 0 };
+          scheduleUpdate();
+        }}
+      />
     </div>
   );
 }

@@ -10,7 +10,7 @@ export default function Page() {
   const [selectedMap, setSelectedMap] = useState<string>(mapKeys[0]);
   const [loadingKey] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
-
+  const [interactive, setInteractive] = useState(false);
   const currentMap = maps[selectedMap];
   const [mapSrc, setMapSrc] = useState(currentMap.base);
 
@@ -40,7 +40,7 @@ export default function Page() {
 
     return () => clearTimeout(timeout); // Clean up on unmount or map change
   }, [selectedMap]);
-  
+
   const toggleOverlay = (id: string) => {
     setVisibleOverlays((prev) =>
       prev.includes(id) ? prev.filter((o) => o !== id) : [...prev, id]
@@ -67,6 +67,8 @@ export default function Page() {
         isLoading={isLoading}
         mapKeys={mapKeys}
         currentMapId={selectedMap}
+        interactive={interactive} // new prop
+        toggleInteractive={() => setInteractive((i) => !i)} // new prop
       />
 
       {isLoading && (
@@ -82,8 +84,9 @@ export default function Page() {
         visibleOverlays={visibleOverlays}
         isLoading={isLoading}
         onMapLoaded={() => {
-          setTimeout(() => setIsLoading(false), 50); // 50ms delay helps prevent flicker
+          setTimeout(() => setIsLoading(false), 50);
         }}
+        interactive={interactive}
       />
     </div>
   );
