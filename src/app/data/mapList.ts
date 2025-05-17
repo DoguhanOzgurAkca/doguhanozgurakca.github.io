@@ -127,32 +127,32 @@ export const maps: Record<string, MapData> = {
     overlays: [
       {
         id: "Fiorina-ceiling4",
-        src: `${R2_BASE}/Fiorina/Fiorina-ceiling4.webp`,
+        src: `${R2_BASE}/Fiorina/Fiorina-Science-Annex-ceiling4.webp`,
         type: "ceiling",
       },
       {
         id: "Fiorina-ceiling3",
-        src: `${R2_BASE}/Fiorina/Fiorina-ceiling3.webp`,
+        src: `${R2_BASE}/Fiorina/Fiorina-Science-Annex-ceiling3.webp`,
         type: "ceiling",
       },
       {
         id: "Fiorina-ceiling2",
-        src: `${R2_BASE}/Fiorina/Fiorina-ceiling2.webp`,
+        src: `${R2_BASE}/Fiorina/Fiorina-Science-Annex-ceiling2.webp`,
         type: "ceiling",
       },
       {
         id: "Fiorina-ceiling1",
-        src: `${R2_BASE}/Fiorina/Fiorina-ceiling1.webp`,
+        src: `${R2_BASE}/Fiorina/Fiorina-Science-Annex-ceiling1.webp`,
         type: "ceiling",
       },
       {
         id: "Fiorina-weedkiller1",
-        src: `${R2_BASE}/Fiorina/Fiorina-lz1.webp`,
+        src: `${R2_BASE}/Fiorina/Fiorina-Science-Annex-lz1.webp`,
         type: "weedkiller",
       },
       {
         id: "Fiorina-weedkiller2",
-        src: `${R2_BASE}/Fiorina/Fiorina-lz2.webp`,
+        src: `${R2_BASE}/Fiorina/Fiorina-Science-Annex-lz2.webp`,
         type: "weedkiller",
       },
     ],
